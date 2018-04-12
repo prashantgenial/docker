@@ -1,7 +1,7 @@
 # Use root/example as user/password credentials
 #removed container_name for users-mysql as we can not scale
 #also need to remove port for scalling up
-version: '2.1'
+version: '2.2'
 
 services:
 
@@ -12,6 +12,7 @@ services:
             condition: service_healthy
     ports:
       - 8086
+    scale: 3  
 
   mysql-container:
     image: mysql:latest
