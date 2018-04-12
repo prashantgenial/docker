@@ -6,6 +6,7 @@ version: '2.2'
 services:
 
   users-mysql:
+    build: ./docker-mysql-spring-boot-example-master/
     image: users-mysql
     depends_on:
         mysql-container:
