@@ -1,24 +1,36 @@
 # Use root/example as user/password credentials
-version: '3.1'
+version: '2.1'
 
 services:
 
-  mysql:
-    image: mysql
-    restart: always
+  users-mysql:
+    image: users-mysql
+    container_name: users-mysql-container
+    networks:
+      - net-spring-db
+    depends_on:
+        mysql-container:
+            condition: service_healthy
+    ports:
+      - 8086:8086
+
+  mysql-container:
+    image: mysql:latest
+    networks:
+      - net-spring-db
     container_name: mysql-container
+    ports:
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: testdb
       MYSQL_USER: sa
       MYSQL_PASSWORD: password
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: myadmin
-    links:
-        - mysql
-    environment:
-        PMA_HOST: mysql
-        PMA_PORT: 3306
-    ports:
-        - '8080:80'    
+    healthcheck:
+        test: "/usr/bin/mysql --user=sa --password=password --execute \"SHOW DATABASES;\""
+        timeout: 20s
+        retries: 10
+      
+networks:
+  net-spring-db:
+    driver: bridge      
