@@ -1,22 +1,20 @@
 # Use root/example as user/password credentials
+#removed container_name for users-mysql as we can not scale
+#also need to remove port for scalling up
 version: '2.1'
 
 services:
 
   users-mysql:
     image: users-mysql
-    networks:
-      - net-spring-db
     depends_on:
         mysql-container:
             condition: service_healthy
     ports:
-      - 8086:8086
+      - 8086
 
   mysql-container:
     image: mysql:latest
-    networks:
-      - net-spring-db
     container_name: mysql-container
     ports:
       - "3306:3306"
@@ -33,15 +31,10 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: myadmin
-    networks:
-      - net-spring-db
     links:
         - mysql-container
     environment:
         PMA_HOST: mysql-container
         PMA_PORT: 3306
     ports:
-        - '8087:80'    
-networks:
-  net-spring-db:
-    driver: bridge
+        - '8087:80'
