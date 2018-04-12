@@ -29,8 +29,20 @@ services:
     healthcheck:
         test: "/usr/bin/mysql --user=sa --password=password --execute \"SHOW DATABASES;\""
         timeout: 20s
-        retries: 10
-      
+        retries: 5
+        
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: myadmin
+    networks:
+      - net-spring-db
+    links:
+        - mysql-container
+    environment:
+        PMA_HOST: mysql-container
+        PMA_PORT: 3306
+    ports:
+        - '8087:80'    
 networks:
   net-spring-db:
-    driver: bridge      
+    driver: bridge
