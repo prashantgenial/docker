@@ -5,7 +5,6 @@ services:
 
   users-mysql:
     image: users-mysql
-    container_name: users-mysql-container
     networks:
       - net-spring-db
     depends_on:
