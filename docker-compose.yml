@@ -3,17 +3,22 @@ version: '3.1'
 
 services:
 
-  db:
+  mysql:
     image: mysql
     restart: always
+    container_name: mysql-container
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: testdb
       MYSQL_USER: sa
       MYSQL_PASSWORD: password
-      
-  adminer:
-    image: adminer
-    restart: always
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: myadmin
+    links:
+        - mysql
+    environment:
+        PMA_HOST: mysql
+        PMA_PORT: 3306
     ports:
-      - 8080:8080
+        - '8080:80'    
